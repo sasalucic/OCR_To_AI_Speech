@@ -63,7 +63,7 @@ def generate_sound(request, text, recognized_photo):
     headers = {
         "Accept": "audio/mpeg",
         "Content-Type": "application/json",
-        "xi-api-key": "ad5b3e63da7d1b82698d5fbe818937a0",  # Replace with your actual API key
+        "xi-api-key": "api key goes here",  # Replace with your actual API key see more here: https://elevenlabs.io/docs/api-reference/text-to-speech
     }
 
     data = {
