@@ -1,0 +1,401 @@
+<!-- ocr/templates/ocr/upload_photo.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Photo</title>
+    <style>
+        html{
+            height: 100%;
+            overflow-y: scroll;
+            overflow-y: auto;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e5e5f7;
+        background: radial-gradient(circle, transparent 20%, #e5e5f7 20%, #e5e5f7 80%, transparent 80%, transparent), radial-gradient(circle, transparent 20%, #e5e5f7 20%, #e5e5f7 80%, transparent 80%, transparent) 100px 100px, linear-gradient(#3f8397 8px, transparent 8px) 0 -4px, linear-gradient(90deg, #3f8397 8px, #e5e5f7 8px) -4px 0;
+        background-size: 200px 200px, 200px 200px, 100px 100px, 100px 100px;
+
+            
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px; /* Adjust as needed */
+            
+        }
+
+        .upload-container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px; /* Adjust the margin to separate the sections */
+            position: absolute;
+            top: 20px;
+            transform: translateX(-50);
+            display: flex;
+            flex-direction: column;
+            align-items: center
+
+        }
+        
+        h2 {
+            color: #63A6FD;
+            font-weight: bold;
+        }
+
+        h3 {
+            color: #63A6FD;
+            font-weight: bold;
+        }
+        
+        input[type="file"] {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px solid #63A6FD;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #63A6FD;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .recognized-text {
+            max-height: 900px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #63A6FD;
+            background-color: #F0F0F0;
+            font-family: 'Helvetica', sans-serif;
+            white-space: pre-line; /* Preserve line breaks */
+
+            box-shadow: 0 4px 8px rgba(1, 1, 1, 0.1);
+            margin-bottom: 20px; /* Adjust the margin to separate the sections */
+            position: absolute;
+            bottom: height;
+            top: 230px;
+            display: flex;
+            flex-direction: column;
+            align-items: center
+
+        }
+        textarea {
+            width: 100%; /* Take up 100% width of the parent container */
+            max-height: 100%; /* Set the maximum height to 100% of the parent container */
+            border: none;
+            resize: none; /* Disable textarea resizing */
+            line-height: 1;
+        }
+        
+        .uploaded_image {
+            max-width: 400px; /* Set the maximum width */
+            max-height: 400px; /* Set the maximum height */
+            width: auto; /* Maintain aspect ratio */
+            height: auto; /* Maintain aspect ratio */
+            transition: transform 0.3s ease; /* 0.3s duration with ease-in-out timing function */
+            transform-origin: top; /* Set the transform origin to the top */
+        }
+        .uploaded_image:hover{
+            transform: scale(1.5);
+        }
+        .audio-container {
+            margin-top: 5px;
+        }
+        
+        @keyframes move {
+            100% {
+                transform: translate3d(0, 0, 1px) rotate(360deg);
+            }
+        }
+        
+        .background {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: #ffffff;
+            overflow: hidden;
+        }
+        
+        .background span {
+            width: 20vmin;
+            height: 20vmin;
+            border-radius: 20vmin;
+            backface-visibility: hidden;
+            position: absolute;
+            animation: move;
+            animation-duration: 45;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+        
+        
+        .background span:nth-child(0) {
+            color: #0026bd;
+            top: 71%;
+            left: 51%;
+            animation-duration: 38s;
+            animation-delay: -30s;
+            transform-origin: -18vw 14vh;
+            box-shadow: 40vmin 0 5.959493656347325vmin currentColor;
+        }
+        .background span:nth-child(1) {
+            color: #6681ea;
+            top: 59%;
+            left: 87%;
+            animation-duration: 19s;
+            animation-delay: -45s;
+            transform-origin: -16vw 20vh;
+            box-shadow: -40vmin 0 5.610175290466718vmin currentColor;
+        }
+        .background span:nth-child(2) {
+            color: #63a6fd;
+            top: 19%;
+            left: 5%;
+            animation-duration: 22s;
+            animation-delay: -50s;
+            transform-origin: -2vw -17vh;
+            box-shadow: 40vmin 0 5.571703524535206vmin currentColor;
+        }
+        .background span:nth-child(3) {
+            color: #63a6fd;
+            top: 68%;
+            left: 51%;
+            animation-duration: 43s;
+            animation-delay: -20s;
+            transform-origin: 17vw -20vh;
+            box-shadow: 40vmin 0 5.505169065281265vmin currentColor;
+        }
+        .background span:nth-child(4) {
+            color: #63a6fd;
+            top: 32%;
+            left: 46%;
+            animation-duration: 20s;
+            animation-delay: -46s;
+            transform-origin: -5vw 8vh;
+            box-shadow: 40vmin 0 5.847682608039442vmin currentColor;
+        }
+        .background span:nth-child(5) {
+            color: #6681ea;
+            top: 82%;
+            left: 60%;
+            animation-duration: 29s;
+            animation-delay: -6s;
+            transform-origin: -16vw 21vh;
+            box-shadow: 40vmin 0 5.537416492661508vmin currentColor;
+        }
+        .background span:nth-child(6) {
+            color: #63a6fd;
+            top: 74%;
+            left: 87%;
+            animation-duration: 17s;
+            animation-delay: -37s;
+            transform-origin: -9vw -22vh;
+            box-shadow: -40vmin 0 5.164183307883645vmin currentColor;
+        }
+        .background span:nth-child(7) {
+            color: #63a6fd;
+            top: 33%;
+            left: 11%;
+            animation-duration: 16s;
+            animation-delay: -2s;
+            transform-origin: 22vw 11vh;
+            box-shadow: -40vmin 0 5.504981370827069vmin currentColor;
+        }
+        .background span:nth-child(8) {
+            color: #63a6fd;
+            top: 45%;
+            left: 86%;
+            animation-duration: 39s;
+            animation-delay: -43s;
+            transform-origin: -5vw 20vh;
+            box-shadow: 40vmin 0 5.95620768673977vmin currentColor;
+        }
+        .background span:nth-child(9) {
+            color: #0026bd;
+            top: 57%;
+            left: 97%;
+            animation-duration: 48s;
+            animation-delay: -23s;
+            transform-origin: -3vw 22vh;
+            box-shadow: -40vmin 0 5.531918887737027vmin currentColor;
+        }
+        .background span:nth-child(10) {
+            color: #63a6fd;
+            top: 36%;
+            left: 48%;
+            animation-duration: 51s;
+            animation-delay: -2s;
+            transform-origin: -3vw -14vh;
+            box-shadow: 40vmin 0 5.908005081722722vmin currentColor;
+        }
+        .background span:nth-child(11) {
+            color: #0026bd;
+            top: 48%;
+            left: 25%;
+            animation-duration: 43s;
+            animation-delay: -14s;
+            transform-origin: 15vw 21vh;
+            box-shadow: -40vmin 0 5.372019825540995vmin currentColor;
+        }
+        .background span:nth-child(12) {
+            color: #0026bd;
+            top: 58%;
+            left: 4%;
+            animation-duration: 10s;
+            animation-delay: -36s;
+            transform-origin: -8vw 2vh;
+            box-shadow: 40vmin 0 5.663760715871211vmin currentColor;
+        }
+        .background span:nth-child(13) {
+            color: #6681ea;
+            top: 56%;
+            left: 52%;
+            animation-duration: 14s;
+            animation-delay: -39s;
+            transform-origin: -4vw 9vh;
+            box-shadow: -40vmin 0 5.608197375599411vmin currentColor;
+        }
+        .background span:nth-child(14) {
+            color: #63a6fd;
+            top: 81%;
+            left: 20%;
+            animation-duration: 40s;
+            animation-delay: -46s;
+            transform-origin: -5vw -17vh;
+            box-shadow: -40vmin 0 5.817603780245014vmin currentColor;
+        }
+        .background span:nth-child(15) {
+            color: #0026bd;
+            top: 36%;
+            left: 89%;
+            animation-duration: 11s;
+            animation-delay: -36s;
+            transform-origin: 9vw -6vh;
+            box-shadow: -40vmin 0 5.9624592093075055vmin currentColor;
+        }
+        .background span:nth-child(16) {
+            color: #0026bd;
+            top: 57%;
+            left: 85%;
+            animation-duration: 36s;
+            animation-delay: -13s;
+            transform-origin: -16vw 3vh;
+            box-shadow: 40vmin 0 5.612395552366106vmin currentColor;
+        }
+        .background span:nth-child(17) {
+            color: #6681ea;
+            top: 55%;
+            left: 17%;
+            animation-duration: 9s;
+            animation-delay: -1s;
+            transform-origin: -24vw 7vh;
+            box-shadow: -40vmin 0 5.544516463535575vmin currentColor;
+        }
+        .background span:nth-child(18) {
+            color: #63a6fd;
+            top: 35%;
+            left: 65%;
+            animation-duration: 10s;
+            animation-delay: -18s;
+            transform-origin: 25vw -9vh;
+            box-shadow: -40vmin 0 5.1440209788185705vmin currentColor;
+        }
+        .background span:nth-child(19) {
+            color: #0026bd;
+            top: 90%;
+            left: 50%;
+            animation-duration: 43s;
+            animation-delay: -19s;
+            transform-origin: -12vw -14vh;
+            box-shadow: -40vmin 0 5.538840412762253vmin currentColor;
+        }
+        
+        
+          
+        
+    </style>
+</head>
+<body>
+
+    <div class="background">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+     </div>
+    <div class="main-container">
+        <div class="upload-container">
+            <h2>Upload a Photo</h2>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="photo" required>
+                <button type="submit">Upload</button>
+            </form>
+        
+        </div>
+        {% if recognized_text %}
+        <div class="recognized-text">
+            <h3>Recognized Text:</h3>
+            <textarea id="recognizedText" rows="10" cols="90">{{ recognized_text }}</textarea>
+            {% if audio_url %}
+            <div class="audio-container">
+                <audio controls>
+                    <source src="{% get_media_prefix %}{{ audio_url }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+            {% endif %}
+
+    
+
+        {% endif %}
+            <h3>Uploaded Image</h3>
+            <img src="{% get_media_prefix %}{{ recognized_photo.image }}" alt="" class="uploaded_image">
+        </div>
+
+
+        
+    </div>
+</body>
+
+</html> 
